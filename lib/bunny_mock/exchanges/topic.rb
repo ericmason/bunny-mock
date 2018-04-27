@@ -24,6 +24,7 @@ module BunnyMock
       # @api public
       #
       def deliver(payload, opts, key)
+        puts 'This is the right gem!'
         delivery_routes = @routes.dup.keep_if { |route, _| key =~ route_to_regex(route) }
         delivery_routes.values.flatten.each { |dest| dest.publish(payload, opts) }
       end
