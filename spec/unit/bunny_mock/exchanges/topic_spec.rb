@@ -68,27 +68,5 @@ describe BunnyMock::Exchanges::Topic do
       @source.publish('Test', routing_key: '.user.create.188')
       expect(company_queue.message_count).to eql 0
     end
-    
-    
-    it 'should not deliver to the wrong queue when there are multiple other subscriptions' do
-      company_queue = @channel.queue
-      company_queue.bind(@source, routing_key: '*.company.*.*')
-      
-      user_queue = @channel.queue
-      user_queue.bind(@source, routing_key: '*.user.*.*')
-      
-      newswire_setting_queue = @channel.queue
-      newswire_setting_queue.bind(@source, routing_key: '*.newswire_setting.*.*')
-      
-      permission_queue = @channel.queue
-      permission_queue.bind(@source, routing_key: '*.permission.*.*')
-      
-      @source.publish('Test', routing_key: '.user.create.188')
-      @source.publish('Test', routing_key: '6583.permission.update.582')
-      expect(company_queue.message_count).to eql 0
-      expect(newswire_setting_queue.message_count).to eql 0
-      expect(permission_queue.message_count).to eql 1
-      expect(user_queue.message_count).to eql 1
-    end
   end
 end
